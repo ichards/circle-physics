@@ -114,11 +114,16 @@ int main()
                 float angle = circle_angle(circle, circle2);
                 float dist = circle_dist(circle, circle2);
 
-                float colfactor = 50;
+                float colfactor = 0.5;
+
+                float faccolfactor = colfactor * (fabs(circle.velocity_x) + fabs(circle.velocity_y) + fabs(circle2.velocity_x) + fabs(circle2.velocity_y));
 
                 // only do it to circle 1
-                circle.velocity_x -= cos(angle) * dist * colfactor * delta;
-                circle.velocity_y -= sin(angle) * dist * colfactor * delta;
+                circle.velocity_x -= cos(angle) * dist * faccolfactor * delta;
+                circle.velocity_y -= sin(angle) * dist * faccolfactor * delta;
+
+                circle2.velocity_x += cos(angle) * dist * faccolfactor * delta;
+                circle2.velocity_y += sin(angle) * dist * faccolfactor * delta;
             }
 
 
