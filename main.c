@@ -61,7 +61,7 @@ int main()
 
     Circle circle = (Circle) {screenWidth / 3, screenHeight / 2, 30, 1, 0, 0};
 
-    Circle circle2 = (Circle) {screenWidth / 3 * 2, screenHeight / 2, 30, 1, 0, 0};
+    Circle circle2 = (Circle) {screenWidth / 3 * 2, screenHeight / 2, 30, 10, 0, 0};
 
 
     while (!WindowShouldClose())
@@ -114,16 +114,16 @@ int main()
                 float angle = circle_angle(circle, circle2);
                 float dist = circle_dist(circle, circle2);
 
-                float colfactor = 0.5;
+                float colfactor = 2;
 
                 float faccolfactor = colfactor * (fabs(circle.velocity_x) + fabs(circle.velocity_y) + fabs(circle2.velocity_x) + fabs(circle2.velocity_y));
 
                 // only do it to circle 1
-                circle.velocity_x -= cos(angle) * dist * faccolfactor * delta;
-                circle.velocity_y -= sin(angle) * dist * faccolfactor * delta;
+                circle.velocity_x -= (cos(angle) * dist * faccolfactor * delta) / circle.mass;
+                circle.velocity_y -= (sin(angle) * dist * faccolfactor * delta) / circle.mass;
 
-                circle2.velocity_x += cos(angle) * dist * faccolfactor * delta;
-                circle2.velocity_y += sin(angle) * dist * faccolfactor * delta;
+                circle2.velocity_x += (cos(angle) * dist * faccolfactor * delta) / circle2.mass;
+                circle2.velocity_y += (sin(angle) * dist * faccolfactor * delta) / circle2.mass;
             }
 
 
