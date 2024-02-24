@@ -61,7 +61,11 @@ int main()
 
     Circle circle = (Circle) {screenWidth / 3, screenHeight / 2, 30, 1, 0, 0};
 
-    Circle circle2 = (Circle) {screenWidth / 3 * 2, screenHeight / 2, 30, 10, 0, 0};
+    Circle circle2 = (Circle) {screenWidth / 3 * 2, screenHeight / 2, 30, 2, 0, 0};
+
+    float gravity = 1;
+
+    float floor_height = screenHeight / 3 * 2;
 
 
     while (!WindowShouldClose())
@@ -96,11 +100,42 @@ int main()
             circle2.velocity_y += force / circle2.mass * delta;
         }
 
+        circle.velocity_y += gravity * delta;
+        circle2.velocity_y += gravity * delta;
+
         circle.x += circle.velocity_x;
         circle.y += circle.velocity_y;
 
         circle2.x += circle2.velocity_x;
         circle2.y += circle2.velocity_y;
+
+
+        if (circle_collision(circle, circle2) == 1) {
+            float angle = circle_angle(circle, circle2);
+            float dist = circle_dist(circle, circle2);
+
+            float colfactor = 2;
+
+            float faccolfactor = colfactor * (fabs(circle.velocity_x) + fabs(circle.velocity_y) + fabs(circle2.velocity_x) + fabs(circle2.velocity_y));
+
+            // only do it to circle 1
+            circle.velocity_x -= (cos(angle) * dist * faccolfactor * delta) / circle.mass;
+            circle.velocity_y -= (sin(angle) * dist * faccolfactor * delta) / circle.mass;
+
+            circle2.velocity_x += (cos(angle) * dist * faccolfactor * delta) / circle2.mass;
+            circle2.velocity_y += (sin(angle) * dist * faccolfactor * delta) / circle2.mass;
+        }
+
+        float c1depth = circle.y + circle.r - floor_height; // how "deep" into the floor circle1 is
+        float c2depth = circle2.y + circle2.r - floor_height;
+        float floorfac = 0.1; // how bouncy floor is
+
+        if (c1depth > 0) {
+            circle.velocity_y -= c1depth * c1depth * delta * floorfac;
+        }
+        if (circle2.y + circle2.r > floor_height) {
+            circle2.velocity_y -= c2depth * c2depth * delta * floorfac;
+        }
 
         BeginDrawing();
 
@@ -109,22 +144,9 @@ int main()
             draw_circle(circle);
             draw_circle(circle2);
 
-            if (circle_collision(circle, circle2) == 1) {
-                DrawText("pussy", 0, 0, 10, BLACK);
-                float angle = circle_angle(circle, circle2);
-                float dist = circle_dist(circle, circle2);
-
-                float colfactor = 2;
-
-                float faccolfactor = colfactor * (fabs(circle.velocity_x) + fabs(circle.velocity_y) + fabs(circle2.velocity_x) + fabs(circle2.velocity_y));
-
-                // only do it to circle 1
-                circle.velocity_x -= (cos(angle) * dist * faccolfactor * delta) / circle.mass;
-                circle.velocity_y -= (sin(angle) * dist * faccolfactor * delta) / circle.mass;
-
-                circle2.velocity_x += (cos(angle) * dist * faccolfactor * delta) / circle2.mass;
-                circle2.velocity_y += (sin(angle) * dist * faccolfactor * delta) / circle2.mass;
-            }
+            DrawLine(0, floor_height-1, screenWidth, floor_height-1, BLACK);
+            DrawLine(0, floor_height, screenWidth, floor_height, BLACK);
+            DrawLine(0, floor_height+1, screenWidth, floor_height+1, BLACK);
 
 
         EndDrawing();
