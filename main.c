@@ -59,7 +59,7 @@ int main()
 
     SetTargetFPS(60);
 
-    Circle circle = (Circle) {screenWidth / 3, screenHeight / 2, 30, 1, 0, 0};
+    Circle circle = (Circle) {screenWidth / 3, screenHeight / 4 * 3, 30, 1, 0, 0};
 
     Circle circle2 = (Circle) {screenWidth / 3 * 2, screenHeight / 2, 30, 2, 0, 0};
 
@@ -131,7 +131,8 @@ int main()
         float floorfac = 0.1; // how bouncy floor is
 
         if (c1depth > 0) {
-            circle.velocity_y -= c1depth * c1depth * delta * floorfac;
+            //circle.velocity_y -= c1depth * c1depth * delta * floorfac;
+            circle.velocity_y = -1 * sqrt(2*c1depth);
         }
         if (circle2.y + circle2.r > floor_height) {
             circle2.velocity_y -= c2depth * c2depth * delta * floorfac;
