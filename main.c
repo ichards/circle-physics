@@ -59,11 +59,11 @@ int main()
 
     SetTargetFPS(60);
 
-    Circle circle = (Circle) {screenWidth / 3, screenHeight / 4 * 3, 30, 1, 0, 0};
+    Circle circle = (Circle) {screenWidth / 3, screenHeight / 4, 30, 1, 0, 0};
 
     Circle circle2 = (Circle) {screenWidth / 3 * 2, screenHeight / 2, 30, 2, 0, 0};
 
-    float gravity = 1;
+    float gravity = 75;
 
     float floor_height = screenHeight / 3 * 2;
 
@@ -103,11 +103,11 @@ int main()
         circle.velocity_y += gravity * delta;
         circle2.velocity_y += gravity * delta;
 
-        circle.x += circle.velocity_x;
-        circle.y += circle.velocity_y;
+        circle.x += circle.velocity_x * delta;
+        circle.y += circle.velocity_y * delta;
 
-        circle2.x += circle2.velocity_x;
-        circle2.y += circle2.velocity_y;
+        circle2.x += circle2.velocity_x * delta;
+        circle2.y += circle2.velocity_y * delta;
 
 
         if (circle_collision(circle, circle2) == 1) {
@@ -132,7 +132,7 @@ int main()
 
         if (c1depth > 0) {
             //circle.velocity_y -= c1depth * c1depth * delta * floorfac;
-            circle.velocity_y = -1 * sqrt(2*c1depth);
+            circle.velocity_y = -1 * sqrt(2*c1depth*gravity);
         }
         if (circle2.y + circle2.r > floor_height) {
             circle2.velocity_y -= c2depth * c2depth * delta * floorfac;
