@@ -57,7 +57,7 @@ int main()
 
     InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
 
-    SetTargetFPS(60);
+    SetTargetFPS(20);
 
     Circle circle = (Circle) {screenWidth / 3, screenHeight / 4, 30, 1, 0, 0};
 
@@ -132,7 +132,10 @@ int main()
 
         if (c1depth > 0) {
             //circle.velocity_y -= c1depth * c1depth * delta * floorfac;
+            float oldv = circle.velocity_y;
             circle.velocity_y = -1 * sqrt(2*c1depth*gravity);
+            circle.velocity_y -= abs(oldv) * 0.6; // makes it slightly bouncy. abs is to ensure the old energy only makes it go up.
+
         }
         if (circle2.y + circle2.r > floor_height) {
             circle2.velocity_y -= c2depth * c2depth * delta * floorfac;
@@ -145,9 +148,9 @@ int main()
             draw_circle(circle);
             draw_circle(circle2);
 
-            DrawLine(0, floor_height-1, screenWidth, floor_height-1, BLACK);
+            //DrawLine(0, floor_height-1, screenWidth, floor_height-1, BLACK);
             DrawLine(0, floor_height, screenWidth, floor_height, BLACK);
-            DrawLine(0, floor_height+1, screenWidth, floor_height+1, BLACK);
+            //DrawLine(0, floor_height+1, screenWidth, floor_height+1, BLACK);
 
 
         EndDrawing();
