@@ -63,9 +63,11 @@ int main()
 
     Circle circle2 = (Circle) {screenWidth / 3 * 2, screenHeight / 2, 30, 2, 0, 0};
 
-    float gravity = 1;
+    float gravity = 10;
 
-    float floor_height = screenHeight / 3 * 2;
+    float goal_height = screenHeight / 4;
+    float tramp_height = screenHeight / 4 * 3;
+    float distance = tramp_height - goal_height;
 
 
     while (!WindowShouldClose())
@@ -103,11 +105,11 @@ int main()
         circle.velocity_y += gravity * delta;
         circle2.velocity_y += gravity * delta;
 
-        circle.x += circle.velocity_x;
-        circle.y += circle.velocity_y;
+        circle.x += circle.velocity_x * delta;
+        circle.y += circle.velocity_y * delta;
 
-        circle2.x += circle2.velocity_x;
-        circle2.y += circle2.velocity_y;
+        circle2.x += circle2.velocity_x * delta;
+        circle2.y += circle2.velocity_y * delta;
 
 
         if (circle_collision(circle, circle2) == 1) {
@@ -126,16 +128,8 @@ int main()
             circle2.velocity_y += (sin(angle) * dist * faccolfactor * delta) / circle2.mass;
         }
 
-        float c1depth = circle.y + circle.r - floor_height; // how "deep" into the floor circle1 is
-        float c2depth = circle2.y + circle2.r - floor_height;
-        float floorfac = 0.1; // how bouncy floor is
-
-        if (c1depth > 0) {
-            //circle.velocity_y -= c1depth * c1depth * delta * floorfac;
-            circle.velocity_y = -1 * sqrt(2*c1depth);
-        }
-        if (circle2.y + circle2.r > floor_height) {
-            circle2.velocity_y -= c2depth * c2depth * delta * floorfac;
+        if (circle.y > tramp_height) {
+            circle.velocity_y = -sqrt(2 * distance * gravity);
         }
 
         BeginDrawing();
@@ -145,9 +139,13 @@ int main()
             draw_circle(circle);
             draw_circle(circle2);
 
-            DrawLine(0, floor_height-1, screenWidth, floor_height-1, BLACK);
-            DrawLine(0, floor_height, screenWidth, floor_height, BLACK);
-            DrawLine(0, floor_height+1, screenWidth, floor_height+1, BLACK);
+            DrawLine(0, tramp_height-1, screenWidth, tramp_height-1, BLACK);
+            DrawLine(0, tramp_height, screenWidth, tramp_height, BLACK);
+            DrawLine(0, tramp_height+1, screenWidth, tramp_height+1, BLACK);
+
+            DrawLine(0, goal_height-1, screenWidth, goal_height-1, RED);
+            DrawLine(0, goal_height, screenWidth, goal_height, RED);
+            DrawLine(0, goal_height+1, screenWidth, goal_height+1, RED);
 
 
         EndDrawing();
