@@ -57,21 +57,24 @@ int main()
 
     InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
 
-    SetTargetFPS(20);
+    SetTargetFPS(60);
 
-    Circle circle = (Circle) {screenWidth / 3, screenHeight / 4, 30, 1, 0, 0};
+    Circle circle = (Circle) {screenWidth / 3, screenHeight / 4 * 4, 30, 1, 0, 0};
 
     Circle circle2 = (Circle) {screenWidth / 3 * 2, screenHeight / 2, 30, 2, 0, 0};
 
     float gravity = 75;
 
-    float floor_height = screenHeight / 3 * 2;
+    float floor_height = screenHeight / 2;
+
+    //WaitTime(0.5);
 
 
     while (!WindowShouldClose())
     {
 
         float delta = GetFrameTime();
+
         float force = 3.0;
 
         if (IsKeyDown(KEY_RIGHT)) {
@@ -98,6 +101,21 @@ int main()
         }
         if (IsKeyDown(KEY_S)) {
             circle2.velocity_y += force / circle2.mass * delta;
+        }
+
+        if (IsKeyPressed(KEY_SPACE)) {
+            circle.y = screenHeight;
+            circle.velocity_y = 0;
+        }
+        if (IsKeyPressed(KEY_T)) {
+            circle.y = 0;
+            circle.velocity_y = 0;
+        }
+        if (IsKeyPressed(KEY_UP)) {
+            gravity += 10;
+        }
+        if (IsKeyPressed(KEY_DOWN)) {
+            gravity -= 10;
         }
 
         circle.velocity_y += gravity * delta;
@@ -133,8 +151,16 @@ int main()
         if (c1depth > 0) {
             //circle.velocity_y -= c1depth * c1depth * delta * floorfac;
             float oldv = circle.velocity_y;
-            circle.velocity_y = -1 * sqrt(2*c1depth*gravity);
-            circle.velocity_y -= abs(oldv) * 0.6; // makes it slightly bouncy. abs is to ensure the old energy only makes it go up.
+
+            // push factor
+            float push = c1depth*5*delta;
+            if (push <= 1) {
+                push = pow(c1depth * delta + 1, 1);
+                circle.velocity_y = -1 * sqrt(2*c1depth*gravity) * push;
+            } else {
+                circle.velocity_y = -1 * sqrt(2*c1depth*gravity) * push;
+            }
+            //circle.velocity_y -= abs(oldv) * 0.6; // makes it slightly bouncy. abs is to ensure the old energy only makes it go up.
 
         }
         if (circle2.y + circle2.r > floor_height) {
