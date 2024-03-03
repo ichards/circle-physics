@@ -117,6 +117,12 @@ int main()
         if (IsKeyPressed(KEY_DOWN)) {
             gravity -= 10;
         }
+        if (IsKeyDown(KEY_RIGHT)) {
+            circle.velocity_x += 50 * delta;
+        }
+        if (IsKeyDown(KEY_LEFT)) {
+            circle.velocity_x -= 50 * delta;
+        }
 
         circle.velocity_y += gravity * delta;
         circle2.velocity_y += gravity * delta;
